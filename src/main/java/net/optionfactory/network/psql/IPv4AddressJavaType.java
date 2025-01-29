@@ -1,7 +1,6 @@
 package net.optionfactory.network.psql;
 
 import com.github.maltalex.ineter.base.IPv4Address;
-import net.optionfactory.network.psql.binary.InetBinaryJdbcType;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractClassJavaType;
