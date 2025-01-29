@@ -9,10 +9,12 @@ public class NetworkTypesContributor implements TypeContributor {
     @Override
     public void contribute(TypeContributions tcs, ServiceRegistry sr) {
 
-        tcs.getTypeConfiguration().getDdlTypeRegistry().addDescriptor(new Cidr4DdlType());
-        tcs.contributeJdbcType(Cidr4JdbcType.INSTANCE);
-        tcs.contributeJavaType(Cidr4JavaType.INSTANCE);
-        tcs.contributeJavaType(Inet4JavaType.INSTANCE);
+        tcs.getTypeConfiguration().getDdlTypeRegistry().addDescriptor(new CidrDdlType());
+        tcs.getTypeConfiguration().getDdlTypeRegistry().addDescriptor(new InetDdlType());
+        tcs.contributeJdbcType(CidrJdbcType.INSTANCE);
+        tcs.contributeJdbcType(InetJdbcType.INSTANCE);
+        tcs.contributeJavaType(IPv4AddressJavaType.INSTANCE);
+        tcs.contributeJavaType(IPv4SubnetJavaType.INSTANCE);
     }
 
 }

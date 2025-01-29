@@ -1,17 +1,18 @@
 package net.optionfactory.network.psql;
 
+import com.github.maltalex.ineter.range.IPv4Subnet;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractClassJavaType;
 import org.hibernate.type.descriptor.jdbc.JdbcType;
 import org.hibernate.type.descriptor.jdbc.JdbcTypeIndicators;
 
-public class Cidr4JavaType extends AbstractClassJavaType<Cidr4> {
+public class IPv4SubnetJavaType extends AbstractClassJavaType<IPv4Subnet> {
 
-    public static final Cidr4JavaType INSTANCE = new Cidr4JavaType();
+    public static final IPv4SubnetJavaType INSTANCE = new IPv4SubnetJavaType();
 
-    public Cidr4JavaType() {
-        super(Cidr4.class);
+    public IPv4SubnetJavaType() {
+        super(IPv4Subnet.class);
     }
 
     @Override
@@ -20,45 +21,45 @@ public class Cidr4JavaType extends AbstractClassJavaType<Cidr4> {
     }
 
     @Override
-    public String toString(Cidr4 value) {
-        return value == null ? null : value.asString();
+    public String toString(IPv4Subnet value) {
+        return value == null ? null : value.toString();
     }
 
     @Override
-    public Cidr4 fromString(CharSequence string) {
-        return string == null ? null : Cidr4.parse(string.toString());
+    public IPv4Subnet fromString(CharSequence string) {
+        return string == null ? null : IPv4Subnet.parse(string.toString());
     }
 
     @Override
     public JdbcType getRecommendedJdbcType(JdbcTypeIndicators indicators) {
-        return Cidr4JdbcType.INSTANCE;
+        return CidrJdbcType.INSTANCE;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <X> X unwrap(Cidr4 value, Class<X> type, WrapperOptions options) {
+    public <X> X unwrap(IPv4Subnet value, Class<X> type, WrapperOptions options) {
         if (value == null) {
             return null;
         }
-        if (Cidr4.class.isAssignableFrom(type)) {
+        if (IPv4Subnet.class.isAssignableFrom(type)) {
             return (X) value;
         }
         if (String.class.isAssignableFrom(type)) {
-            return (X) value.asString();
+            return (X) value.toString();
         }
         throw unknownUnwrap(type);
     }
 
     @Override
-    public <X> Cidr4 wrap(X value, WrapperOptions options) {
+    public <X> IPv4Subnet wrap(X value, WrapperOptions options) {
         if (value == null) {
             return null;
         }
-        if (value instanceof Cidr4 v) {
+        if (value instanceof IPv4Subnet v) {
             return v;
         }
         if (value instanceof String str) {
-            return Cidr4.parse(str);
+            return IPv4Subnet.parse(str);
         }
         throw unknownWrap(value.getClass());
     }

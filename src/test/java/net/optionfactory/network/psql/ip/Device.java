@@ -1,17 +1,17 @@
 package net.optionfactory.network.psql.ip;
 
+import com.github.maltalex.ineter.base.IPv4Address;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import net.optionfactory.network.psql.Inet4;
 
 @Entity
 public class Device {
 
     @Id
     public String hostname;
-    public Inet4 ip;
+    public IPv4Address ip;
 
-    public static Device of(String hostname, Inet4 ip) {
+    public static Device of(String hostname, IPv4Address ip) {
         final Device d = new Device();
         d.hostname = hostname;
         d.ip = ip;

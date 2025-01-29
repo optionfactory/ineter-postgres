@@ -1,7 +1,7 @@
 package net.optionfactory.network.psql.cidr;
 
+import com.github.maltalex.ineter.range.IPv4Subnet;
 import jakarta.inject.Inject;
-import net.optionfactory.network.psql.Cidr4;
 import net.optionfactory.network.psql.HibernateOnPsqlTestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,13 +23,13 @@ public class NetworkTest {
     @Before
     public void setup() {
         tx.executeWithoutResult((ts) -> {
-            networks.save(Network.of("local", Cidr4.parse("1.1.0.0/16")));
+            networks.save(Network.of("local", IPv4Subnet.of("1.1.0.0/16")));
         });
     }
 
     @Test
     public void canRead() {
         final var n = tx.execute((ts) -> networks.findById("local").orElseThrow());
-        Assert.assertEquals(Cidr4.parse("1.1.0.0/16"), n.cidr);
+        Assert.assertEquals(IPv4Subnet.of("1.1.0.0/16"), n.cidr);
     }
 }

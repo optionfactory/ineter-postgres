@@ -1,8 +1,8 @@
 package net.optionfactory.network.psql.cidr;
 
+import com.github.maltalex.ineter.range.IPv4Subnet;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import net.optionfactory.network.psql.Cidr4;
 
 @Entity
 public class Network {
@@ -10,9 +10,9 @@ public class Network {
     @Id
     public String name;
 
-    public Cidr4 cidr;
+    public IPv4Subnet cidr;
 
-    public static Network of(String name, Cidr4 cidr) {
+    public static Network of(String name, IPv4Subnet cidr) {
         final Network d = new Network();
         d.name = name;
         d.cidr = cidr;

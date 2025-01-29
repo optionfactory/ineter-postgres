@@ -1,12 +1,15 @@
 package net.optionfactory.network.psql.ip;
 
+import com.github.maltalex.ineter.base.IPv4Address;
 import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceContext;
 import net.optionfactory.network.psql.HibernateOnPsqlTestConfig;
-import net.optionfactory.network.psql.Inet4;
+import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.orm.hibernate5.SessionHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -23,7 +26,7 @@ public class DeviceTest {
     @Before
     public void setup() {
         tx.executeWithoutResult(ts -> {
-            devices.save(Device.of("localhost", Inet4.parse("1.1.1.1")));
+            devices.save(Device.of("localhost", IPv4Address.of("1.1.1.1")));
         });
 
     }
@@ -31,6 +34,6 @@ public class DeviceTest {
     @Test
     public void canRead() {
         final var d = tx.execute(ts -> devices.findById("localhost").orElseThrow());
-        Assert.assertEquals(Inet4.parse("1.1.1.1"), d.ip);
+        Assert.assertEquals(IPv4Address.of("1.1.1.1"), d.ip);
     }
 }

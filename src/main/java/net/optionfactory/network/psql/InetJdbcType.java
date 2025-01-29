@@ -1,10 +1,5 @@
 package net.optionfactory.network.psql;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 import org.hibernate.type.descriptor.ValueBinder;
 import org.hibernate.type.descriptor.ValueExtractor;
 import org.hibernate.type.descriptor.WrapperOptions;
@@ -15,9 +10,11 @@ import org.hibernate.type.descriptor.jdbc.JdbcLiteralFormatter;
 import org.hibernate.type.descriptor.jdbc.JdbcType;
 import org.postgresql.util.PGobject;
 
-public class Cidr4JdbcType implements JdbcType {
+import java.sql.*;
 
-    public static JdbcType INSTANCE = new Cidr4JdbcType();
+public class InetJdbcType implements JdbcType {
+
+    public static JdbcType INSTANCE = new InetJdbcType();
 
     @Override
     public int getJdbcTypeCode() {
@@ -26,7 +23,7 @@ public class Cidr4JdbcType implements JdbcType {
 
     @Override
     public int getDefaultSqlTypeCode() {
-        return Cidr4DdlType.SQL_TYPE_CODE;
+        return InetDdlType.SQL_TYPE_CODE;
     }
 
     @Override
@@ -40,7 +37,7 @@ public class Cidr4JdbcType implements JdbcType {
             @Override
             protected void doBind(PreparedStatement st, X value, int index, WrapperOptions options) throws SQLException {
                 final PGobject holder = new PGobject();
-                holder.setType("cidr");
+                holder.setType("inet");
                 holder.setValue(getJavaType().unwrap(value, String.class, options));
                 st.setObject(index, holder);
             }
@@ -48,7 +45,7 @@ public class Cidr4JdbcType implements JdbcType {
             @Override
             protected void doBind(CallableStatement st, X value, String name, WrapperOptions options) throws SQLException {
                 final PGobject holder = new PGobject();
-                holder.setType("cidr");
+                holder.setType("inet");
                 holder.setValue(getJavaType().unwrap(value, String.class, options));
                 st.setObject(name, holder);
             }

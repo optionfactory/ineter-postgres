@@ -1,18 +1,19 @@
 package net.optionfactory.network.psql;
 
+import com.github.maltalex.ineter.base.IPv4Address;
+import net.optionfactory.network.psql.binary.InetBinaryJdbcType;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.type.SqlTypes;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractClassJavaType;
 import org.hibernate.type.descriptor.jdbc.JdbcType;
 import org.hibernate.type.descriptor.jdbc.JdbcTypeIndicators;
 
-public class Inet4JavaType extends AbstractClassJavaType<Inet4> {
+public class IPv4AddressJavaType extends AbstractClassJavaType<IPv4Address> {
 
-    public static final Inet4JavaType INSTANCE = new Inet4JavaType();
+    public static final IPv4AddressJavaType INSTANCE = new IPv4AddressJavaType();
 
-    public Inet4JavaType() {
-        super(Inet4.class);
+    public IPv4AddressJavaType() {
+        super(IPv4Address.class);
     }
 
     @Override
@@ -21,51 +22,57 @@ public class Inet4JavaType extends AbstractClassJavaType<Inet4> {
     }
 
     @Override
-    public String toString(Inet4 value) {
-        return value == null ? null : value.asString();
+    public String toString(IPv4Address value) {
+        return value == null ? null : value.toString();
     }
 
     @Override
-    public Inet4 fromString(CharSequence string) {
-        return string == null ? null : Inet4.parse(string.toString());
+    public IPv4Address fromString(CharSequence string) {
+        return string == null ? null : IPv4Address.of(string.toString());
     }
 
     @Override
     public JdbcType getRecommendedJdbcType(JdbcTypeIndicators indicators) {
-        return indicators.getJdbcType(SqlTypes.INET);
+        return InetJdbcType.INSTANCE;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <X> X unwrap(Inet4 value, Class<X> type, WrapperOptions options) {
+    public <X> X unwrap(IPv4Address value, Class<X> type, WrapperOptions options) {
         if (value == null) {
             return null;
         }
-        if (Inet4.class.isAssignableFrom(type)) {
+        if (IPv4Address.class.isAssignableFrom(type)) {
             return (X) value;
         }
+        if (byte[].class.isAssignableFrom(type)) {
+            return (X) value.toBigEndianArray();
+        }
         if (Integer.class.isAssignableFrom(type)) {
-            return (X) (Integer) value.repr();
+            return (X) (Integer) value.toInt();
         }
         if (String.class.isAssignableFrom(type)) {
-            return (X) value.asString();
+            return (X) value.toString();
         }
         throw unknownUnwrap(type);
     }
 
     @Override
-    public <X> Inet4 wrap(X value, WrapperOptions options) {
+    public <X> IPv4Address wrap(X value, WrapperOptions options) {
         if (value == null) {
             return null;
         }
-        if (value instanceof Inet4 v) {
+        if (value instanceof IPv4Address v) {
             return v;
         }
+        if (value instanceof byte[] v) {
+            return IPv4Address.of(v);
+        }
         if (value instanceof Integer repr) {
-            return new Inet4(repr);
+            return IPv4Address.of(repr);
         }
         if (value instanceof String str) {
-            return Inet4.parse(str);
+            return IPv4Address.of(str);
         }
         throw unknownWrap(value.getClass());
     }

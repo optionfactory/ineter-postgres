@@ -4,9 +4,9 @@ import org.hibernate.type.descriptor.java.JavaType;
 import org.hibernate.type.descriptor.jdbc.JdbcType;
 import org.hibernate.type.descriptor.sql.DdlType;
 
-public class Cidr4DdlType implements DdlType {
+public class CidrDdlType implements DdlType {
 
-    public static int SQL_TYPE_CODE = 100_000;
+    public static int SQL_TYPE_CODE = 100_001;
     
     
     @Override
