@@ -8,6 +8,7 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 import javax.sql.DataSource;
 
+import net.optionfactory.network.psql.binary.CidrPgObject;
 import net.optionfactory.network.psql.binary.InetPgObject;
 import net.optionfactory.spring.data.jpa.filtering.EnableJpaWhitelistFilteringRepositories;
 import org.hibernate.SessionFactory;
@@ -79,6 +80,7 @@ public class HibernateOnPsqlTestConfig {
     public PlatformTransactionManager transactionManager(SessionFactory hibernate) {
         var htm = new HibernateTransactionManager(hibernate);
         htm.setSessionInitializer(s -> s.doWork(c -> {
+            c.unwrap(PGConnection.class).addDataType("cidr", CidrPgObject.class);
             c.unwrap(PGConnection.class).addDataType("inet", InetPgObject.class);
         }));
         return htm;

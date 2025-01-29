@@ -1,6 +1,7 @@
 package net.optionfactory.network.psql;
 
 import com.github.maltalex.ineter.range.IPv4Subnet;
+import net.optionfactory.network.psql.binary.CidrBinaryJdbcType;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractClassJavaType;
@@ -32,7 +33,7 @@ public class IPv4SubnetJavaType extends AbstractClassJavaType<IPv4Subnet> {
 
     @Override
     public JdbcType getRecommendedJdbcType(JdbcTypeIndicators indicators) {
-        return CidrJdbcType.INSTANCE;
+        return CidrBinaryJdbcType.INSTANCE;
     }
 
     @SuppressWarnings("unchecked")
