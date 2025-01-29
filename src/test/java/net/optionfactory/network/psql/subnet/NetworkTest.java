@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.cidr;
+package net.optionfactory.network.psql.subnet;
 
 import com.github.maltalex.ineter.range.IPv4Subnet;
 import jakarta.inject.Inject;
@@ -30,6 +30,6 @@ public class NetworkTest {
     @Test
     public void canRead() {
         final var n = tx.execute((ts) -> networks.findById("local").orElseThrow());
-        Assert.assertEquals(IPv4Subnet.of("1.1.0.0/16"), n.cidr);
+        Assert.assertEquals(IPv4Subnet.of("1.1.0.0/16"), n.subnet);
     }
 }
