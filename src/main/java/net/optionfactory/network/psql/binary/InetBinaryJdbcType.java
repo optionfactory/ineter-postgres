@@ -1,5 +1,6 @@
 package net.optionfactory.network.psql.binary;
 
+import com.github.maltalex.ineter.base.IPv4Address;
 import net.optionfactory.network.psql.InetDdlType;
 import org.hibernate.type.descriptor.ValueBinder;
 import org.hibernate.type.descriptor.ValueExtractor;
@@ -38,7 +39,7 @@ public class InetBinaryJdbcType implements JdbcType {
             protected void doBind(PreparedStatement st, X value, int index, WrapperOptions options) throws SQLException {
                 final InetPgObject holder = new InetPgObject();
                 holder.setType("inet");
-                holder.setBytes(getJavaType().unwrap(value, byte[].class, options));
+                holder.setAddress(getJavaType().unwrap(value, IPv4Address.class, options));
                 st.setObject(index, holder);
             }
 
@@ -46,7 +47,7 @@ public class InetBinaryJdbcType implements JdbcType {
             protected void doBind(CallableStatement st, X value, String name, WrapperOptions options) throws SQLException {
                 final InetPgObject holder = new InetPgObject();
                 holder.setType("inet");
-                holder.setBytes(getJavaType().unwrap(value, byte[].class, options));
+                holder.setAddress(getJavaType().unwrap(value, IPv4Address.class, options));
                 st.setObject(name, holder);
             }
         };
@@ -57,17 +58,17 @@ public class InetBinaryJdbcType implements JdbcType {
         return new BasicExtractor<>(javaType, this) {
             @Override
             protected X doExtract(ResultSet rs, int paramIndex, WrapperOptions options) throws SQLException {
-                return getJavaType().wrap(rs.getObject(paramIndex, InetPgObject.class).getBytes(), options);
+                return getJavaType().wrap(rs.getObject(paramIndex, InetPgObject.class).getAddress(), options);
             }
 
             @Override
             protected X doExtract(CallableStatement statement, int index, WrapperOptions options) throws SQLException {
-                return getJavaType().wrap(statement.getObject(index, InetPgObject.class).getBytes(), options);
+                return getJavaType().wrap(statement.getObject(index, InetPgObject.class).getAddress(), options);
             }
 
             @Override
             protected X doExtract(CallableStatement statement, String name, WrapperOptions options) throws SQLException {
-                return getJavaType().wrap(statement.getObject(name, InetPgObject.class).getBytes(), options);
+                return getJavaType().wrap(statement.getObject(name, InetPgObject.class).getAddress(), options);
             }
 
         };

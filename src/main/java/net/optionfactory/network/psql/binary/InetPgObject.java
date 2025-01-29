@@ -5,6 +5,7 @@ import org.postgresql.util.PGBinaryObject;
 import org.postgresql.util.PGobject;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class InetPgObject extends PGobject implements PGBinaryObject {
 
@@ -13,23 +14,22 @@ public class InetPgObject extends PGobject implements PGBinaryObject {
     private static final byte NOT_CIDR = 0;
     private static final byte IPV4_LEN = 4;
 
-    private byte[] bytes;
+    private IPv4Address address;
 
-    public byte[] getBytes() {
-        return bytes;
+    public IPv4Address getAddress() {
+        return address;
     }
 
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
+    public void setAddress(IPv4Address address) {
+        this.address = address;
     }
 
     @Override
     public void setByteValue(byte[] bytes, int i) throws SQLException {
-        this.bytes = new byte[4];
         if (bytes[i+3] != IPV4_LEN) {
             throw new IllegalArgumentException("Illegal size for ipv4, expected %d, found %d".formatted(IPV4_LEN, bytes[i+3]));
         }
-        System.arraycopy(bytes, i+4, this.bytes, 0, 4);
+        this.address = IPv4Address.of(Arrays.copyOfRange(bytes, i+4, i+8));
     }
 
     @Override
@@ -43,16 +43,16 @@ public class InetPgObject extends PGobject implements PGBinaryObject {
         bytes[i+1] = MASK32;
         bytes[i+2] = NOT_CIDR;
         bytes[i+3] = IPV4_LEN;
-        System.arraycopy(this.bytes, 0, bytes, i+4, 4);
+        System.arraycopy(this.address.toBigEndianArray(), 0, bytes, i+4, 4);
     }
 
     @Override
     public void setValue(String value) throws SQLException {
-        this.bytes = IPv4Address.of(value).toBigEndianArray();
+        this.address = IPv4Address.of(value);
     }
 
     @Override
     public String getValue() {
-        return IPv4Address.of(this.bytes).toString();
+        return address.toString();
     }
 }
