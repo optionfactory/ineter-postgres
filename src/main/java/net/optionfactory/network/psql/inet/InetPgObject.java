@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.binary;
+package net.optionfactory.network.psql.inet;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 import org.postgresql.util.PGBinaryObject;

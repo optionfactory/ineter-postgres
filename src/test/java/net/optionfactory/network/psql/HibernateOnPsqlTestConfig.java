@@ -8,15 +8,14 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 import javax.sql.DataSource;
 
-import net.optionfactory.network.psql.binary.CidrPgObject;
-import net.optionfactory.network.psql.binary.InetPgObject;
+import net.optionfactory.network.psql.inet.InetPgObject;
+import net.optionfactory.network.psql.cidr.CidrPgObject;
 import net.optionfactory.spring.data.jpa.filtering.EnableJpaWhitelistFilteringRepositories;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.type.format.jackson.JacksonJsonFormatMapper;
-import org.postgresql.PGConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -46,6 +45,7 @@ public class HibernateOnPsqlTestConfig {
         config.setJdbcUrl(dbContainer.getJdbcUrl());
         config.setUsername(dbContainer.getUsername());
         config.setPassword(dbContainer.getPassword());
+        config.setDataSourceProperties(JdbcDatasourceConfigurer.datasourceConfigProps());
         return new HikariDataSource(config);
 
     }
@@ -79,10 +79,10 @@ public class HibernateOnPsqlTestConfig {
     @Bean
     public PlatformTransactionManager transactionManager(SessionFactory hibernate) {
         var htm = new HibernateTransactionManager(hibernate);
-        htm.setSessionInitializer(s -> s.doWork(c -> {
-            c.unwrap(PGConnection.class).addDataType("cidr", CidrPgObject.class);
-            c.unwrap(PGConnection.class).addDataType("inet", InetPgObject.class);
-        }));
+//        htm.setSessionInitializer(s -> s.doWork(c -> {
+//            c.unwrap(PGConnection.class).addDataType("cidr", CidrPgObject.class);
+//            c.unwrap(PGConnection.class).addDataType("inet", InetPgObject.class);
+//        }));
         return htm;
     }
 

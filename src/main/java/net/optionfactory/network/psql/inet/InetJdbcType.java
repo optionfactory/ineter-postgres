@@ -1,7 +1,6 @@
-package net.optionfactory.network.psql.binary;
+package net.optionfactory.network.psql.inet;
 
-import com.github.maltalex.ineter.range.IPv4Subnet;
-import net.optionfactory.network.psql.CidrDdlType;
+import com.github.maltalex.ineter.base.IPv4Address;
 import org.hibernate.type.descriptor.ValueBinder;
 import org.hibernate.type.descriptor.ValueExtractor;
 import org.hibernate.type.descriptor.WrapperOptions;
@@ -13,9 +12,9 @@ import org.hibernate.type.descriptor.jdbc.JdbcType;
 
 import java.sql.*;
 
-public class CidrBinaryJdbcType implements JdbcType {
+public class InetJdbcType implements JdbcType {
 
-    public static JdbcType INSTANCE = new CidrBinaryJdbcType();
+    public static JdbcType INSTANCE = new InetJdbcType();
 
     @Override
     public int getJdbcTypeCode() {
@@ -24,7 +23,7 @@ public class CidrBinaryJdbcType implements JdbcType {
 
     @Override
     public int getDefaultSqlTypeCode() {
-        return CidrDdlType.SQL_TYPE_CODE;
+        return InetDdlType.SQL_TYPE_CODE;
     }
 
     @Override
@@ -37,17 +36,17 @@ public class CidrBinaryJdbcType implements JdbcType {
         return new BasicBinder<>(javaType, this) {
             @Override
             protected void doBind(PreparedStatement st, X value, int index, WrapperOptions options) throws SQLException {
-                final CidrPgObject holder = new CidrPgObject();
-                holder.setType("cidr");
-                holder.setSubnet(getJavaType().unwrap(value, IPv4Subnet.class, options));
+                final InetPgObject holder = new InetPgObject();
+                holder.setType("inet");
+                holder.setAddress(getJavaType().unwrap(value, IPv4Address.class, options));
                 st.setObject(index, holder);
             }
 
             @Override
             protected void doBind(CallableStatement st, X value, String name, WrapperOptions options) throws SQLException {
-                final CidrPgObject holder = new CidrPgObject();
-                holder.setType("cidr");
-                holder.setSubnet(getJavaType().unwrap(value, IPv4Subnet.class, options));
+                final InetPgObject holder = new InetPgObject();
+                holder.setType("inet");
+                holder.setAddress(getJavaType().unwrap(value, IPv4Address.class, options));
                 st.setObject(name, holder);
             }
         };
@@ -58,17 +57,30 @@ public class CidrBinaryJdbcType implements JdbcType {
         return new BasicExtractor<>(javaType, this) {
             @Override
             protected X doExtract(ResultSet rs, int paramIndex, WrapperOptions options) throws SQLException {
-                return getJavaType().wrap(rs.getObject(paramIndex, CidrPgObject.class).getSubnet(), options);
+                var obj = rs.getObject(paramIndex);
+                if (obj instanceof InetPgObject inet) {
+                    return getJavaType().wrap(inet.getAddress(), options);
+                }
+                return getJavaType().wrap(obj.toString(), options);
+
             }
 
             @Override
             protected X doExtract(CallableStatement statement, int index, WrapperOptions options) throws SQLException {
-                return getJavaType().wrap(statement.getObject(index, CidrPgObject.class).getSubnet(), options);
+                var obj = statement.getObject(index);
+                if (obj instanceof InetPgObject inet) {
+                    return getJavaType().wrap(inet.getAddress(), options);
+                }
+                return getJavaType().wrap(obj.toString(), options);
             }
 
             @Override
             protected X doExtract(CallableStatement statement, String name, WrapperOptions options) throws SQLException {
-                return getJavaType().wrap(statement.getObject(name, CidrPgObject.class).getSubnet(), options);
+                var obj = statement.getObject(name);
+                if (obj instanceof InetPgObject inet) {
+                    return getJavaType().wrap(inet.getAddress(), options);
+                }
+                return getJavaType().wrap(obj.toString(), options);
             }
 
         };
