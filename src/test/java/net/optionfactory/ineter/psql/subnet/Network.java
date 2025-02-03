@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.subnet;
+package net.optionfactory.ineter.psql.subnet;
 
 import com.github.maltalex.ineter.range.IPv4Subnet;
 import jakarta.persistence.Entity;

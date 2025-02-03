@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.subnet;
+package net.optionfactory.ineter.psql.subnet;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

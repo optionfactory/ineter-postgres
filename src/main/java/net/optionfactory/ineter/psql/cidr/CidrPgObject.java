@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.cidr;
+package net.optionfactory.ineter.psql.cidr;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 import com.github.maltalex.ineter.range.IPv4Subnet;

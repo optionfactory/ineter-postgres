@@ -1,9 +1,9 @@
-package net.optionfactory.network.psql.ip;
+package net.optionfactory.ineter.psql.ip;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceContext;
-import net.optionfactory.network.psql.HibernateOnPsqlTestConfig;
+import net.optionfactory.ineter.psql.HibernateOnPsqlTestConfig;
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Before;

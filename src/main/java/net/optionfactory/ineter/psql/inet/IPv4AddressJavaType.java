@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.inet;
+package net.optionfactory.ineter.psql.inet;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 import org.hibernate.dialect.Dialect;

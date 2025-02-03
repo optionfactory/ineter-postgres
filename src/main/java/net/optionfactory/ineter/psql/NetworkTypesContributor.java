@@ -1,18 +1,15 @@
-package net.optionfactory.network.psql;
+package net.optionfactory.ineter.psql;
 
-import net.optionfactory.network.psql.cidr.CidrPgObject;
-import net.optionfactory.network.psql.inet.IPv4AddressJavaType;
-import net.optionfactory.network.psql.inet.InetDdlType;
-import net.optionfactory.network.psql.inet.InetJdbcType;
-import net.optionfactory.network.psql.cidr.CidrDdlType;
-import net.optionfactory.network.psql.cidr.CidrJdbcType;
-import net.optionfactory.network.psql.cidr.IPv4SubnetJavaType;
-import net.optionfactory.network.psql.inet.InetPgObject;
+import net.optionfactory.ineter.psql.inet.IPv4AddressJavaType;
+import net.optionfactory.ineter.psql.inet.InetDdlType;
+import net.optionfactory.ineter.psql.inet.InetJdbcType;
+import net.optionfactory.ineter.psql.cidr.CidrDdlType;
+import net.optionfactory.ineter.psql.cidr.CidrJdbcType;
+import net.optionfactory.ineter.psql.cidr.IPv4SubnetJavaType;
 import org.hibernate.boot.model.TypeContributions;
 import org.hibernate.boot.model.TypeContributor;
 import org.hibernate.service.ServiceRegistry;
 
-import java.util.Properties;
 
 public class NetworkTypesContributor implements TypeContributor {
 

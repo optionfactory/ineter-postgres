@@ -1,8 +1,8 @@
-package net.optionfactory.network.psql.subnet;
+package net.optionfactory.ineter.psql.subnet;
 
 import com.github.maltalex.ineter.range.IPv4Subnet;
 import jakarta.inject.Inject;
-import net.optionfactory.network.psql.HibernateOnPsqlTestConfig;
+import net.optionfactory.ineter.psql.HibernateOnPsqlTestConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

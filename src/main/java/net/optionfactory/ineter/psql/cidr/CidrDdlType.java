@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.cidr;
+package net.optionfactory.ineter.psql.cidr;
 
 import org.hibernate.type.descriptor.java.JavaType;
 import org.hibernate.type.descriptor.jdbc.JdbcType;
@@ -7,8 +7,7 @@ import org.hibernate.type.descriptor.sql.DdlType;
 public class CidrDdlType implements DdlType {
 
     public static int SQL_TYPE_CODE = 100_001;
-    
-    
+
     @Override
     public int getSqlTypeCode() {
         return SQL_TYPE_CODE;

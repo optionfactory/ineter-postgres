@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.ip;
+package net.optionfactory.ineter.psql.ip;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 import jakarta.persistence.Entity;

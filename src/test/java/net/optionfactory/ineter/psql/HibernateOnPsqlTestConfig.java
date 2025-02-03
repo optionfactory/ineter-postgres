@@ -1,5 +1,6 @@
-package net.optionfactory.network.psql;
+package net.optionfactory.ineter.psql;
 
+import net.optionfactory.ineter.psql.IneterPsqlDatasourceProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.zaxxer.hikari.HikariConfig;
@@ -8,8 +9,6 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 import javax.sql.DataSource;
 
-import net.optionfactory.network.psql.inet.InetPgObject;
-import net.optionfactory.network.psql.cidr.CidrPgObject;
 import net.optionfactory.spring.data.jpa.filtering.EnableJpaWhitelistFilteringRepositories;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
@@ -45,7 +44,7 @@ public class HibernateOnPsqlTestConfig {
         config.setJdbcUrl(dbContainer.getJdbcUrl());
         config.setUsername(dbContainer.getUsername());
         config.setPassword(dbContainer.getPassword());
-        config.setDataSourceProperties(JdbcDatasourceConfigurer.datasourceConfigProps());
+        config.setDataSourceProperties(IneterPsqlDatasourceProperties.create());
         return new HikariDataSource(config);
 
     }

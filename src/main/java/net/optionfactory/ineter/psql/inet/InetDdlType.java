@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.inet;
+package net.optionfactory.ineter.psql.inet;
 
 import org.hibernate.type.descriptor.java.JavaType;
 import org.hibernate.type.descriptor.jdbc.JdbcType;

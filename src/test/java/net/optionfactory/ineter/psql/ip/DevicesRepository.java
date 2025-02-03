@@ -1,4 +1,4 @@
-package net.optionfactory.network.psql.ip;
+package net.optionfactory.ineter.psql.ip;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
