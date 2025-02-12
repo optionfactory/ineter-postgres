@@ -27,6 +27,7 @@ public class DeviceTest {
     public void setup() {
         tx.executeWithoutResult(ts -> {
             devices.save(Device.of("localhost", IPv4Address.of("1.1.1.1")));
+            devices.save(Device.of("localhost_null", null));
         });
 
     }
@@ -35,5 +36,11 @@ public class DeviceTest {
     public void canRead() {
         final var d = tx.execute(ts -> devices.findById("localhost").orElseThrow());
         Assert.assertEquals(IPv4Address.of("1.1.1.1"), d.ip);
+    }
+
+    @Test
+    public void canReadNull() {
+        final var d = tx.execute(ts -> devices.findById("localhost_null").orElseThrow());
+        Assert.assertNull(d.ip);
     }
 }

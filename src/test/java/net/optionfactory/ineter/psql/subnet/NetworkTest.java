@@ -24,6 +24,7 @@ public class NetworkTest {
     public void setup() {
         tx.executeWithoutResult((ts) -> {
             networks.save(Network.of("local", IPv4Subnet.of("1.1.0.0/16")));
+            networks.save(Network.of("local_null", null));
         });
     }
 
@@ -31,5 +32,11 @@ public class NetworkTest {
     public void canRead() {
         final var n = tx.execute((ts) -> networks.findById("local").orElseThrow());
         Assert.assertEquals(IPv4Subnet.of("1.1.0.0/16"), n.subnet);
+    }
+
+    @Test
+    public void canReadNull() {
+        final var n = tx.execute((ts) -> networks.findById("local_null").orElseThrow());
+        Assert.assertNull(n.subnet);
     }
 }

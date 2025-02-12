@@ -1,11 +1,13 @@
 package net.optionfactory.ineter.psql.cidr;
 
 import com.github.maltalex.ineter.range.IPv4Subnet;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
 import org.hibernate.type.descriptor.ValueBinder;
 import org.hibernate.type.descriptor.ValueExtractor;
 import org.hibernate.type.descriptor.WrapperOptions;
@@ -61,6 +63,9 @@ public class CidrJdbcType implements JdbcType {
             @Override
             protected X doExtract(ResultSet rs, int paramIndex, WrapperOptions options) throws SQLException {
                 var obj = rs.getObject(paramIndex);
+                if (obj == null) {
+                    return null;
+                }
                 if (obj instanceof CidrPgObject inet) {
                     return getJavaType().wrap(inet.getSubnet(), options);
                 }
@@ -71,6 +76,9 @@ public class CidrJdbcType implements JdbcType {
             @Override
             protected X doExtract(CallableStatement statement, int index, WrapperOptions options) throws SQLException {
                 var obj = statement.getObject(index);
+                if (obj == null) {
+                    return null;
+                }
                 if (obj instanceof CidrPgObject inet) {
                     return getJavaType().wrap(inet.getSubnet(), options);
                 }
@@ -80,6 +88,9 @@ public class CidrJdbcType implements JdbcType {
             @Override
             protected X doExtract(CallableStatement statement, String name, WrapperOptions options) throws SQLException {
                 var obj = statement.getObject(name);
+                if (obj == null) {
+                    return null;
+                }
                 if (obj instanceof CidrPgObject inet) {
                     return getJavaType().wrap(inet.getSubnet(), options);
                 }

@@ -62,6 +62,9 @@ public class InetJdbcType implements JdbcType {
             @Override
             protected X doExtract(ResultSet rs, int paramIndex, WrapperOptions options) throws SQLException {
                 var obj = rs.getObject(paramIndex);
+                if (obj == null) {
+                    return null;
+                }
                 if (obj instanceof InetPgObject inet) {
                     return getJavaType().wrap(inet.getAddress(), options);
                 }
@@ -72,6 +75,9 @@ public class InetJdbcType implements JdbcType {
             @Override
             protected X doExtract(CallableStatement statement, int index, WrapperOptions options) throws SQLException {
                 var obj = statement.getObject(index);
+                if (obj == null) {
+                    return null;
+                }
                 if (obj instanceof InetPgObject inet) {
                     return getJavaType().wrap(inet.getAddress(), options);
                 }
@@ -81,6 +87,9 @@ public class InetJdbcType implements JdbcType {
             @Override
             protected X doExtract(CallableStatement statement, String name, WrapperOptions options) throws SQLException {
                 var obj = statement.getObject(name);
+                if (obj == null) {
+                    return null;
+                }
                 if (obj instanceof InetPgObject inet) {
                     return getJavaType().wrap(inet.getAddress(), options);
                 }
