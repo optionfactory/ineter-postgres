@@ -33,6 +33,12 @@
             <organization>OptionFactory</organization>
             <organizationUrl>http://optionfactory.net</organizationUrl>
         </developer>
+        <developer>
+            <name>Marco Ronchiato</name>
+            <email>marco.ronchiato@optionfactory.net</email>
+            <organization>OptionFactory</organization>
+            <organizationUrl>http://optionfactory.net</organizationUrl>
+        </developer>
     </developers>
     <distributionManagement>
         <snapshotRepository>
