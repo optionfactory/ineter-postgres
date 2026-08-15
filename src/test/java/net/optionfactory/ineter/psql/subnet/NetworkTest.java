@@ -3,16 +3,13 @@ package net.optionfactory.ineter.psql.subnet;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 import jakarta.inject.Inject;
 import net.optionfactory.ineter.psql.HibernateOnPsqlTestConfig;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = HibernateOnPsqlTestConfig.class)
+@SpringJUnitConfig(HibernateOnPsqlTestConfig.class)
 public class NetworkTest {
 
     @Inject
@@ -20,7 +17,7 @@ public class NetworkTest {
     @Inject
     private TransactionTemplate tx;
 
-    @Before
+    @BeforeEach
     public void setup() {
         tx.executeWithoutResult((ts) -> {
             networks.save(Network.of("local", IPv4Subnet.of("1.1.0.0/16")));
@@ -31,12 +28,12 @@ public class NetworkTest {
     @Test
     public void canRead() {
         final var n = tx.execute((ts) -> networks.findById("local").orElseThrow());
-        Assert.assertEquals(IPv4Subnet.of("1.1.0.0/16"), n.subnet);
+        Assertions.assertEquals(IPv4Subnet.of("1.1.0.0/16"), n.subnet);
     }
 
     @Test
     public void canReadNull() {
         final var n = tx.execute((ts) -> networks.findById("local_null").orElseThrow());
-        Assert.assertNull(n.subnet);
+        Assertions.assertNull(n.subnet);
     }
 }

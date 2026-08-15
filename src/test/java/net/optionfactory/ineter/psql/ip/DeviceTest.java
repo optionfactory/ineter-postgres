@@ -2,20 +2,14 @@ package net.optionfactory.ineter.psql.ip;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 import jakarta.inject.Inject;
-import jakarta.persistence.PersistenceContext;
 import net.optionfactory.ineter.psql.HibernateOnPsqlTestConfig;
-import org.hibernate.SessionFactory;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.orm.hibernate5.SessionHolder;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = HibernateOnPsqlTestConfig.class)
+@SpringJUnitConfig(HibernateOnPsqlTestConfig.class)
 public class DeviceTest {
 
     @Inject
@@ -23,7 +17,7 @@ public class DeviceTest {
     @Inject
     private TransactionTemplate tx;
 
-    @Before
+    @BeforeEach
     public void setup() {
         tx.executeWithoutResult(ts -> {
             devices.save(Device.of("localhost", IPv4Address.of("1.1.1.1")));
@@ -35,12 +29,12 @@ public class DeviceTest {
     @Test
     public void canRead() {
         final var d = tx.execute(ts -> devices.findById("localhost").orElseThrow());
-        Assert.assertEquals(IPv4Address.of("1.1.1.1"), d.ip);
+        Assertions.assertEquals(IPv4Address.of("1.1.1.1"), d.ip);
     }
 
     @Test
     public void canReadNull() {
         final var d = tx.execute(ts -> devices.findById("localhost_null").orElseThrow());
-        Assert.assertNull(d.ip);
+        Assertions.assertNull(d.ip);
     }
 }

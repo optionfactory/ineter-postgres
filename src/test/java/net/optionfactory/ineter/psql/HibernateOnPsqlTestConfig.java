@@ -1,28 +1,26 @@
 package net.optionfactory.ineter.psql;
 
-import net.optionfactory.ineter.psql.IneterPsqlDatasourceProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.persistence.EntityManagerFactory;
 import java.beans.PropertyVetoException;
 import java.util.Properties;
 import javax.sql.DataSource;
 
 import net.optionfactory.spring.data.jpa.filtering.EnableJpaWhitelistFilteringRepositories;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategySnakeCaseImpl;
 import org.hibernate.cfg.AvailableSettings;
-import org.hibernate.type.format.jackson.JacksonJsonFormatMapper;
+import org.hibernate.type.format.jackson.Jackson3JsonFormatMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @Configuration
 @EnableJpaWhitelistFilteringRepositories(basePackageClasses = HibernateOnPsqlTestConfig.class)
@@ -44,20 +42,12 @@ public class HibernateOnPsqlTestConfig {
         config.setJdbcUrl(dbContainer.getJdbcUrl());
         config.setUsername(dbContainer.getUsername());
         config.setPassword(dbContainer.getPassword());
-        config.setDataSourceProperties(IneterPsqlDatasourceProperties.create());
         return new HikariDataSource(config);
-
     }
 
     @Bean
-    public ObjectMapper hibernateMapper() {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        return mapper;
-    }
-
-    @Bean
-    public SessionFactory entityManagerFactory(ObjectMapper hibernateMapper, DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+        final var hibernateMapper = tools.jackson.databind.json.JsonMapper.builder().build();
         final var properties = new Properties();
         properties.put(AvailableSettings.HBM2DDL_AUTO, "update");
         properties.put(AvailableSettings.SHOW_SQL, true);
@@ -66,28 +56,27 @@ public class HibernateOnPsqlTestConfig {
         properties.put(AvailableSettings.GENERATE_STATISTICS, false);
         properties.put(AvailableSettings.USE_SECOND_LEVEL_CACHE, false);
         properties.put(AvailableSettings.USE_QUERY_CACHE, false);
-        properties.put(AvailableSettings.JSON_FORMAT_MAPPER, new JacksonJsonFormatMapper(hibernateMapper));
-        final var builder = new LocalSessionFactoryBuilder(dataSource);
-        builder.scanPackages(HibernateOnPsqlTestConfig.class.getPackage().getName());
-        builder.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
-        builder.setImplicitNamingStrategy(new ImplicitNamingStrategyComponentPathImpl());
-        builder.addProperties(properties);
-        return builder.buildSessionFactory();
+        properties.put(AvailableSettings.JSON_FORMAT_MAPPER, new Jackson3JsonFormatMapper(hibernateMapper));
+        properties.put(AvailableSettings.PHYSICAL_NAMING_STRATEGY, new PhysicalNamingStrategySnakeCaseImpl());
+        properties.put(AvailableSettings.IMPLICIT_NAMING_STRATEGY, new ImplicitNamingStrategyComponentPathImpl());
+
+        final var factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        factory.setPackagesToScan(HibernateOnPsqlTestConfig.class.getPackage().getName());
+        factory.setDataSource(dataSource);
+        factory.setJpaProperties(properties);
+        return factory;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(SessionFactory hibernate) {
-        var htm = new HibernateTransactionManager(hibernate);
-//        htm.setSessionInitializer(s -> s.doWork(c -> {
-//            c.unwrap(PGConnection.class).addDataType("cidr", CidrPgObject.class);
-//            c.unwrap(PGConnection.class).addDataType("inet", InetPgObject.class);
-//        }));
-        return htm;
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 
     @Bean
     public TransactionTemplate tt(PlatformTransactionManager htt) {
         return new TransactionTemplate(htt);
     }
+
 
 }
