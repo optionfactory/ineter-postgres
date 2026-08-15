@@ -4,7 +4,7 @@
     <groupId>net.optionfactory</groupId>
     <artifactId>ineter-postgres</artifactId>
     <description>ineter-postgres</description>
-    <version>1.3</version>
+    <version>1.4</version>
     <packaging>jar</packaging>
     <name>ineter-postgres</name>
     <url>https://github.com/optionfactory/ineter-postgres</url>
