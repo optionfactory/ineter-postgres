@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/optionfactory/elaine/refs/heads/master/schema/elaine-v1.schema.json
+schema_version: 1
+name: ineter-postgres
+tier: tier2
+lifecycle: active
+type: library
+stewards:
+  - Francesco Degrassi
+  - Roberto Ferranti
